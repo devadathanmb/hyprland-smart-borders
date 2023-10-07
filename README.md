@@ -14,7 +14,7 @@ https://github.com/devadathanmb/hyprland-dynamic-borders/assets/84301852/c32d2c2
 ## How?
 
 1. Download the script using `wget https://raw.githubusercontent.com/devadathanmb/hyprland-dynamic-borders/main/dynamic-borders.sh`
-2. Copy it into your `~/.local/bin` using `cp dynamic-borders.sh`
-3. Make sure the script is executable (`chmod a+x ~/.local/bin/dynamic-borders.sh`)
+2. Move the file to your preferred location `(eg : ~/.local/bin using mv dynamic-borders.sh ~/.local/bin)`
+3. Make sure the script is executable `(eg : chmod a+x ~/.local/bin/dynamic-borders.sh)`
 4. Put the script to your auto start section in `hyprland.conf` `(eg : exec-once = ~/.local/bin/dynamic-borders.sh
 )`
