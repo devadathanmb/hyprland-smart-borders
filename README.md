@@ -1,4 +1,4 @@
-# Hyprland dynamic borders
+# Hyprland smart borders (aka dynamic borders)
 
 A bash script to enable dynamic borders (aka smart borders) in hyprland using hyprland-ipc. This does what could be done via scripting mentioned [here](https://github.com/hyprwm/Hyprland/issues/2324).
 
