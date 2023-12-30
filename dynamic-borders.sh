@@ -5,6 +5,10 @@ function handle {
     then
         window_id=$(echo $1 | cut --delimiter ">" --fields=3 | cut --delimiter "," --fields=1)
         workspace_id=$(echo $1 | cut --delimiter ">" --fields=3 | cut --delimiter "," --fields=2)
+        if [[ $workspace_id == "special" ]]
+        then
+            workspace_id=-99
+        fi
         windows=$(hyprctl workspaces -j | jq ".[] | select(.id == $workspace_id) | .windows")
 
         if [[ $windows -eq 1 ]]
@@ -25,11 +29,27 @@ function handle {
     then
         window_id=$(echo $1 | cut --delimiter ">" --fields=3 | cut --delimiter "," --fields=1)
         workspace_id=$(echo $1 | cut --delimiter ">" --fields=3 | cut --delimiter "," --fields=2)
+
+        # Sepcial workspaces have an id of -99, they need to be handled separately
+        if [[ $workspace_id == "special" ]]
+        then
+            workspace_id=-99
+        fi
+
         windows=$(hyprctl workspaces -j | jq ".[] | select(.id == $workspace_id) | .windows")
 
         if [[ $windows -eq 1 ]]
         then
-            hyprctl setprop address:0x$window_id forcenoborder 1 lock
+            # Check if the current window is floating and then set the border accordingly
+            floating_status=$(hyprctl clients -j | jq ".[] | select(.address == \"0x$window_id\" ) | .floating" )
+            echo $floating_status
+            if [[ $floating_status == "false" ]]
+            then
+                hyprctl setprop address:0x$window_id forcenoborder 1 lock
+            else
+                hyprctl setprop address:0x$window_id forcenoborder 0 lock
+                return
+            fi
         elif [[ $windows -eq 2 ]]
         then
             addresses=$(hyprctl clients -j | jq -r --arg foo "$foo" ".[] | select(.workspace.id == $workspace_id) | .address")
