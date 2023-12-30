@@ -26,7 +26,7 @@ wget https://raw.githubusercontent.com/devadathanmb/hyprland-dynamic-borders/mai
 ```bash
 chmod a+x ./dynamic-borders.sh
 mkdir -p ~/.local/bin
-mv ./dynamic-borders.sh ~/.loca/bin
+mv ./dynamic-borders.sh ~/.local/bin
 ```
 
 4. Put the script to your auto start section in `~/.config/hyprland.conf`
