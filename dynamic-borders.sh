@@ -42,7 +42,6 @@ function handle {
         then
             # Check if the current window is floating and then set the border accordingly
             floating_status=$(hyprctl clients -j | jq ".[] | select(.address == \"0x$window_id\" ) | .floating" )
-            echo $floating_status
             if [[ $floating_status == "false" ]]
             then
                 hyprctl setprop address:0x$window_id forcenoborder 1 lock
@@ -77,7 +76,15 @@ function handle {
         if [[ $windows -eq 1 ]]
         then
             window_id=$(hyprctl activewindow -j | jq -r ".address")
-            hyprctl setprop address:$window_id forcenoborder 1 lock
+            floating_status=$(hyprctl activewindow -j | jq ".floating")
+            if [[ $floating_status == "false" ]]
+            then
+                hyprctl setprop address:$window_id forcenoborder 1 lock
+            else
+                hyprctl setprop address:$window_id forcenoborder 0 lock
+                return
+            fi
+
         fi
 
     elif [[ ${1:0:18} == "changefloatingmode" ]]
