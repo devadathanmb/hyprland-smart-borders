@@ -13,7 +13,15 @@ function handle {
 
         if [[ $windows -eq 1 ]]
         then
-            hyprctl setprop address:0x$window_id forcenoborder 1 lock
+            floating_status=$(hyprctl clients -j | jq ".[] | select(.address == \"0x$window_id\" ) | .floating" )
+            if [[ $floating_status == "false" ]]
+            then
+                hyprctl setprop address:0x$window_id forcenoborder 1 lock
+            else
+                hyprctl setprop address:0x$window_id forcenoborder 0 lock
+                return
+            fi
+
         elif [[ $windows -eq 2 ]]
         then
             addresses=$(hyprctl clients -j | jq -r --arg foo "$foo" ".[] | select(.workspace.id == $workspace_id) | .address")
