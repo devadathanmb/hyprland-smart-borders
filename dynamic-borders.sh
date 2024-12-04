@@ -16,9 +16,9 @@ function handle {
             floating_status=$(hyprctl clients -j | jq ".[] | select(.address == \"0x$window_id\" ) | .floating" )
             if [[ $floating_status == "false" ]]
             then
-                hyprctl setprop address:0x$window_id forcenoborder 1 lock
+                hyprctl dispatch setprop address:0x$window_id noborder 1
             else
-                hyprctl setprop address:0x$window_id forcenoborder 0 lock
+                hyprctl dispatch setprop address:0x$window_id noborder 0
                 return
             fi
 
@@ -28,7 +28,7 @@ function handle {
             for address in $addresses
             do
                 if [[ "$address" != "$window_id" ]]; then
-                    hyprctl setprop address:$(echo $address | xargs) forcenoborder 0 lock
+                    hyprctl dispatch setprop address:$(echo $address | xargs) noborder 0
                 fi
             done
         fi
@@ -52,9 +52,9 @@ function handle {
             floating_status=$(hyprctl clients -j | jq ".[] | select(.address == \"0x$window_id\" ) | .floating" )
             if [[ $floating_status == "false" ]]
             then
-                hyprctl setprop address:0x$window_id forcenoborder 1 lock
+                hyprctl dispatch setprop address:0x$window_id noborder 1
             else
-                hyprctl setprop address:0x$window_id forcenoborder 0 lock
+                hyprctl dispatch setprop address:0x$window_id noborder 0
                 return
             fi
         elif [[ $windows -eq 2 ]]
@@ -63,7 +63,7 @@ function handle {
             for address in $addresses
             do
                 if [[ "$address" != "$window_id" ]]; then
-                    hyprctl setprop address:$(echo $address | xargs) forcenoborder 0 lock
+                    hyprctl dispatch setprop address:$(echo $address | xargs) noborder 0
                 fi
             done
         fi
@@ -73,7 +73,7 @@ function handle {
         for workspace in $single_window_workspaces
         do
             window=$(hyprctl clients -j | jq ".[] | select(.workspace.id == $workspace) | .address")
-            hyprctl setprop address:$(echo $window | xargs) forcenoborder 1 lock
+            hyprctl dispatch setprop address:$(echo $window | xargs) noborder 1
         done
 
     elif [[ ${1:0:11} == "closewindow" ]]
@@ -87,9 +87,9 @@ function handle {
             floating_status=$(hyprctl activewindow -j | jq ".floating")
             if [[ $floating_status == "false" ]]
             then
-                hyprctl setprop address:$window_id forcenoborder 1 lock
+                hyprctl dispatch setprop address:$window_id noborder 1
             else
-                hyprctl setprop address:$window_id forcenoborder 0 lock
+                hyprctl dispatch setprop address:$window_id noborder 0
                 return
             fi
 
@@ -102,14 +102,14 @@ function handle {
         workspace_id=$(hyprctl clients -j | jq --arg address "$address" '.[] | select(.address == $address) | .workspace.id')
         if [[ $floating_status -eq 1 ]]
         then
-            hyprctl setprop address:$address forcenoborder 0 lock
+            hyprctl dispatch setprop address:$address noborder 0
         else
             no_windows=$(hyprctl workspaces -j | jq ".[] | select(.id == $workspace_id) | .windows")
             if [[ $no_windows -eq 1 ]]
             then
-                hyprctl setprop address:$address forcenoborder 1 lock
+                hyprctl dispatch setprop address:$address noborder 1
             else
-                hyprctl setprop address:$address forcenoborder 0 lock
+                hyprctl dispatch setprop address:$address noborder 0
             fi
         fi
     fi
@@ -117,4 +117,4 @@ function handle {
 
 # Socket directory has changed in Hyprland v0.40.0
 # socat - UNIX-CONNECT:/tmp/hypr/$(echo $HYPRLAND_INSTANCE_SIGNATURE)/.socket2.sock | while read line; do handle $line; done
-socat - UNIX-CONNECT:$(echo $XDG_RUNTIME_DIR)/hypr/$(echo $HYPRLAND_INSTANCE_SIGNATURE)/.socket2.sock | while read line; do handle $line; done
+socat -U - UNIX-CONNECT:$(echo $XDG_RUNTIME_DIR)/hypr/$(echo $HYPRLAND_INSTANCE_SIGNATURE)/.socket2.sock | while read line; do handle $line; done
