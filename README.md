@@ -1,14 +1,16 @@
 # Hyprland smart borders (aka dynamic borders)
 
-A bash script to enable **dynamic borders** (aka **smart borders**) in hyprland using _hyprland-ipc_.
+A bash script to enable **dynamic borders** (aka **smart borders**) in hyprland using _hyprland-ipc_. Handles almost all the cases which I could think of.
 
-Handles almost all the cases which I could think of.
+> [!WARNING]
+> This repository has been archived and is no longer maintained. Hyprland now natively supports dynamic borders through window rules, making this script obsolete.
+>
+> For configuration instructions, please refer to [Issue #2](https://github.com/devadathanmb/hyprland-smart-borders/issues/2)
+
+---
 
 > [!NOTE]
 > This does what could be done via scripting mentioned [here](https://github.com/hyprwm/Hyprland/issues/2324).
-
-> [!IMPORTANT]
-> The **socket** directory has been changed in `Hyprland v0.40.0`. Hence for old users, please update the script for everything to work properly.
 
 See the demo to see how it works.
 
